@@ -14,6 +14,19 @@ new Vue({
       this.monsterHealth = 100;
       this.humanHealth = 100;
     },
+    calcDamage: function(type){
+      let max;
+      let min;
+      type ===
+        'normal'
+        ? (max = 10, min = 1)
+          : type === 'special'
+          ? (max = 20, min = 10)
+            :(max=10, min=5);
+      min = Math.ceil(min);
+      max = Math.floor(max);
+      return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
+    },
     startGame: function(){
       this.gameReset();
       this.gameStarted = true;
@@ -25,14 +38,16 @@ new Vue({
       return {width: this.monsterHealth + '%'};
     },
     attackMonster: function(type) {
-      type === 'normal' ? this.monsterHealth -=10 : this.monsterHealth -=20;
-      this.humanHealth -= 5;
+      this.monsterHealth -= this.calcDamage(type);
+      this.humanHealth -= this.calcDamage('monster');
 
     },
     checkGameOver: function() {
     if((this.monsterHealth <= 0) || (this.humanHealth <= 0)) {
         this.gameStarted = false;
-        alert('Game Over');
+        if(confirm("Press Ok if you want to start a new game!") === true) {
+          this.startGame();
+        }
       }
     },
     healHuman: function() {
