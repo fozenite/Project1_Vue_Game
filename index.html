@@ -42,15 +42,13 @@
                 SPECIAL ATTACK
             </button>
             <button id="heal" @click="healHuman()">HEAL</button>
-            <button id="give-up">GIVE UP</button>
+            <button id="give-up" @click="gameStarted=false">GIVE UP</button>
         </div>
     </section>
     <section v-if="!(eventsList.length === 0)" class="row log">
         <div class="small-12 columns">
             <ul>
-                <li>
-
-                </li>
+                <li v-for="item in eventsList" :class="computeLogClass(item)"> {{ item }}</li>
             </ul>
         </div>
     </section>

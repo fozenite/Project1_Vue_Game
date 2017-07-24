@@ -13,6 +13,7 @@ new Vue({
     gameReset: function(){
       this.monsterHealth = 100;
       this.humanHealth = 100;
+      this.eventsList = [];
     },
     calcDamage: function(type){
       let max;
@@ -38,9 +39,12 @@ new Vue({
       return {width: this.monsterHealth + '%'};
     },
     attackMonster: function(type) {
-      this.monsterHealth -= this.calcDamage(type);
-      this.humanHealth -= this.calcDamage('monster');
-
+      let humanAttackDamage = this.calcDamage(type);
+      let monsterAttackDamage = this.calcDamage('monster')
+      this.monsterHealth -= humanAttackDamage;
+      this.humanHealth -= monsterAttackDamage;
+      this.eventsList.push(`PLAYER HITS MONSTER FOR ${humanAttackDamage}`);
+      this.eventsList.push(`MONSTER HITS PLAYER FOR ${monsterAttackDamage}`);
     },
     checkGameOver: function() {
     if((this.monsterHealth <= 0) || (this.humanHealth <= 0)) {
@@ -52,7 +56,13 @@ new Vue({
     },
     healHuman: function() {
       this.humanHealth <= 90 ? this.humanHealth += 10 : this.humanHealth = 100;
+      this.eventsList.push(`PLAYER USES HEAL`);
+      let monsterAttackDamage = this.calcDamage('monster');
+      this.humanHealth -= monsterAttackDamage;
+      this.eventsList.push(`MONSTER HITS PLAYER FOR ${monsterAttackDamage}`);
+    },
+    computeLogClass: function(item) {
+      return item[0] === 'P' ? 'player-turn' : 'monster-turn';
     }
-  },
-
+  }
 });
